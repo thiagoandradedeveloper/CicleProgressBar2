@@ -1,0 +1,42 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+    background: #000;
+}
+.card{
+    --percent: 21%;
+    position: relative;
+    width: 250px;
+    height: 250px;
+    background: conic-gradient(
+        from 0deg, 
+      cyan 0%,
+      cyan 0% var(--percent),
+      #222 var(--percent),
+      #222 100%
+    );
+    border-radius: 50%;
+    /* transition nao funciona com css */
+}
+.card::before{
+    --percent: "21%";
+    content: var(--percent);
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: #000;
+    top: calc(50% - 100px);
+    left: calc(50% - 100px);
+    color: #fff;
+}
+.card.updated::before {
+    content: "Novo Conteúdo";
+}

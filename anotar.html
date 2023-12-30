@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100dvh;
+            background: #000;
+        }
+        .card{
+            --percent: 21%;
+            position: relative;
+            width: 250px;
+            height: 250px;
+            background: conic-gradient(
+                from 0deg, 
+            cyan 0%,
+            cyan 0% var(--percent),
+            #222 var(--percent),
+            #222 100%
+            );
+            border-radius: 50%;
+            /* transition nao funciona com css */
+        }
+        .card::before{
+            content: "21,00%";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: #000;
+            top: calc(50% - 100px);
+            left: calc(50% - 100px);
+            color: #fff;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="card"></div>
+    <script>
+
+        setInterval(()=>{
+
+            novoPercent = formatarNumero(Math.random() * 100,2) + "%"; 
+            let card = document.querySelectorAll(".card")[0];
+            card.style.setProperty('--percent', novoPercent);
+
+            // Acesse a folha de estilo atual
+            let estilo = document.styleSheets[0]; // Supondo que seja a primeira folha de estilo
+
+            // Crie uma nova regra para o pseudo-elemento
+            let novaRegra = `.card::before { content: "${novoPercent.replace(".",",")}"; }`;
+
+            // Insira a nova regra na folha de estilo
+            estilo.insertRule(novaRegra, estilo.cssRules.length);
+
+            // Adicione a classe ao elemento
+            let meuElemento = document.querySelector('.minhaClasse');
+            meuElemento.classList.add('minhaClasse');
+
+        },2000);
+
+        function formatarNumero(numero, casasDecimais) {
+            // Multiplica por 10 elevado ao número de casas decimais, trunca e depois divide novamente.
+            var fatorMultiplicacao = Math.pow(10, casasDecimais);
+            var numeroFormatado = Math.trunc(numero * fatorMultiplicacao) / fatorMultiplicacao;
+            
+            // Retorna o número formatado como string
+            return numeroFormatado.toFixed(casasDecimais);
+        }   
+
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            position: relative;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            z-index: 5;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            height: 100dvh;
+            background-color: #222;
+        }
+        .container{
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .card{
+            position: relative;
+            width: 220px;
+            height: 250px;
+            background: #2a2a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .percent, svg{
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+        .percent{
+            position: relative;
+            transform: rotate(270deg);
+        }
+        svg circle{
+            width: 100%;
+            height: 100%;
+            fill: transparent;
+            stroke-width: 10;
+            stroke: #000;
+            transform: translate(5px,5px);
+        }
+        svg circle:nth-child(2){
+            transition: 1s;
+            stroke: var(--clr);
+            stroke-dasharray: 440px;
+            stroke-dashoffset: calc(440 - (440 * var(--percent)) / 100);
+        }
+        .card {
+            width: 200px;
+            height: 200px;
+            background: conic-gradient(from 0deg, var(--clr) 0%);
+        }
+        #valuePercent{
+            transform: rotate(90deg);
+            color: #fff;
+            font-size: 25px;
+            width: 120px;
+            text-align: center;
+            position: absolute;
+            left: calc(50% - 60px);
+            top: calc(50% - 10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="percent">
+                <svg style="--clr:#04fc43;--percent:100">
+                    <circle cx="70" cy="70" r="70"></circle>
+                    <circle cx="70" cy="70" r="70"></circle>
+                </svg>
+                <div class="valor" id="valuePercent">100,00%</div>
+                <div class="valuePercent"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        
+        let elemento = document.querySelectorAll("svg circle:nth-child(2)")[0];
+        let valuePercent = document.getElementById("valuePercent");
+        setInterval(()=>{
+            // Gere um valor aleatório entre 0% e 100%
+            var novoPercent = Math.random() * 100;
+            elemento.style.strokeDashoffset = "calc(440 - (440 * " + novoPercent + ") / 100)";
+            valuePercent.textContent = (formatarNumero(novoPercent, 2) + "%").replace(".",",");
+
+            // Atualize a variável CSS e a largura do elemento
+            //ocument.documentElement.style.setProperty('--percent', novoPercent + '%');
+        },3000)
+        function formatarNumero(numero, casasDecimais) {
+            // Multiplica por 10 elevado ao número de casas decimais, trunca e depois divide novamente.
+            var fatorMultiplicacao = Math.pow(10, casasDecimais);
+            var numeroFormatado = Math.trunc(numero * fatorMultiplicacao) / fatorMultiplicacao;
+            
+            // Retorna o número formatado como string
+            return numeroFormatado.toFixed(casasDecimais);
+        }
+    </script>
+</body>
+</html>

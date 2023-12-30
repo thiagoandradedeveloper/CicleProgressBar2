@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100dvh;
+            background: #000;
+        }
+        .card{
+            --percent: 21%;
+            position: relative;
+            width: 250px;
+            height: 250px;
+            background: conic-gradient(
+                from 0deg, 
+            cyan 0%,
+            cyan 0% var(--percent),
+            #222 var(--percent),
+            #222 100%
+            );
+            border-radius: 50%;
+            /* transition nao funciona com css */
+        }
+        .card::before{
+            content: "21,00%";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: #000;
+            top: calc(50% - 100px);
+            left: calc(50% - 100px);
+            color: #fff;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="card"></div>
+    <script>
+
+        setInterval(()=>{
+
+            novoPercent = formatarNumero(Math.random() * 100,2) + "%"; 
+            let card = document.querySelectorAll(".card")[0];
+            card.style.setProperty('--percent', novoPercent);
+
+            // Acesse a folha de estilo atual
+            let estilo = document.styleSheets[0]; // Supondo que seja a primeira folha de estilo
+
+            // Crie uma nova regra para o pseudo-elemento
+            let novaRegra = `.card::before { content: "${novoPercent.replace(".",",")}"; }`;
+
+            // Insira a nova regra na folha de estilo
+            estilo.insertRule(novaRegra, estilo.cssRules.length);
+
+            // Adicione a classe ao elemento
+            let meuElemento = document.querySelector('.minhaClasse');
+            meuElemento.classList.add('minhaClasse');
+
+        },2000);
+
+        function formatarNumero(numero, casasDecimais) {
+            // Multiplica por 10 elevado ao número de casas decimais, trunca e depois divide novamente.
+            var fatorMultiplicacao = Math.pow(10, casasDecimais);
+            var numeroFormatado = Math.trunc(numero * fatorMultiplicacao) / fatorMultiplicacao;
+            
+            // Retorna o número formatado como string
+            return numeroFormatado.toFixed(casasDecimais);
+        }   
+
+    </script>
+</body>
+</html>
